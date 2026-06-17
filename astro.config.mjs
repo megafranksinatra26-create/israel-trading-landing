@@ -1,10 +1,12 @@
 import { defineConfig } from "astro/config";
 import cloudflare from "@astrojs/cloudflare";
 
+const mountPath = process.env.WEBFLOW_MOUNT_PATH ?? "CLOUD_MOUNT_PATH";
+
 export default defineConfig({
-  base: "CLOUD_MOUNT_PATH",
+  base: mountPath,
   build: {
-    assetsPrefix: "CLOUD_MOUNT_PATH",
+    assetsPrefix: mountPath,
   },
   output: "server",
   adapter: cloudflare({

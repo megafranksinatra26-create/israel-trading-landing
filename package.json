@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
+    "dev": "WEBFLOW_MOUNT_PATH=/ astro dev",
     "build": "astro build",
     "preview": "astro build && wrangler dev",
     "deploy": "webflow cloud deploy",
