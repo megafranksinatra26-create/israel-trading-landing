@@ -1,0 +1,22 @@
+{
+  "name": "israel-trading-landing",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro build && wrangler dev",
+    "deploy": "webflow cloud deploy",
+    "deploy:publish": "webflow cloud deploy --auto-publish"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.6.6",
+    "astro": "^5.7.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250415.0",
+    "@webflow/webflow-cli": "^1.5.2",
+    "wrangler": "^4.11.1"
+  }
+}
