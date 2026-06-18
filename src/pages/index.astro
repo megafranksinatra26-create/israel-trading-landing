@@ -122,7 +122,7 @@ const base = import.meta.env.BASE_URL;
 
     h1 { font-size: clamp(48px, 8vw, 88px); }
     h2 { font-size: clamp(30px, 4.5vw, 46px); }
-    h3 { font-size: clamp(22px, 2.8vw, 30px); }
+    h3 { font-size: clamp(26px, 3.4vw, 38px); }
 
     h1 em, h2 em, h3 em,
     .hero__title em,
@@ -294,7 +294,7 @@ const base = import.meta.env.BASE_URL;
 
     .btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 
-    /* Hero — split layout (Fluxora + coaching ref, RTL) */
+    /* Hero — full-bleed portrait background + content (RTL) */
     .hero {
       min-height: 100vh;
       min-height: 100dvh;
@@ -304,77 +304,99 @@ const base = import.meta.env.BASE_URL;
       background: var(--bg-primary);
     }
 
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .hero__bg-media {
+      position: absolute;
+      inset: -14% 0 -10% 0;
+      width: 100%;
+      height: 124%;
+      will-change: transform;
+    }
+
+    .hero__bg-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(10, 10, 10, 0.97) 0%, rgba(10, 10, 10, 0.88) 28%, rgba(10, 10, 10, 0.45) 52%, rgba(10, 10, 10, 0.05) 72%, transparent 100%),
+        linear-gradient(to top, rgba(10, 10, 10, 0.75) 0%, transparent 22%);
+      z-index: 1;
+    }
+
+    @media (max-width: 959px) {
+      .hero__bg-overlay {
+        background:
+          linear-gradient(to top, rgba(10, 10, 10, 0.98) 0%, rgba(10, 10, 10, 0.78) 38%, rgba(10, 10, 10, 0.15) 100%);
+      }
+    }
+
     .hero__grid {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
+      align-items: center;
       min-height: calc(100dvh - var(--nav-height));
-      align-items: stretch;
       position: relative;
       z-index: 2;
     }
 
-    @media (max-width: 959px) {
-      .hero__content { order: 1; }
-      .hero__visual { order: 2; min-height: 360px; }
-    }
-
-    @media (min-width: 960px) {
-      .hero__grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 0;
-      }
-    }
-
-    /* Visual side — portrait + glow (RTL: first column = right) */
-    .hero__visual {
+    /* Content side — left in RTL (dark overlay side) */
+    .hero__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 0 32px;
       position: relative;
-      min-height: 420px;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse 80% 70% at 70% 40%, rgba(255, 107, 53, 0.55) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 50% at 30% 80%, rgba(255, 69, 0, 0.35) 0%, transparent 50%),
-        linear-gradient(160deg, #1a0a00 0%, #0A0A0A 55%, #0A0A0A 100%);
-    }
-
-    @media (min-width: 960px) {
-      .hero__visual { min-height: auto; }
+      width: 100%;
+      max-width: 560px;
+      margin-inline-start: auto;
     }
 
     .hero__visual-glow {
       position: absolute;
-      width: 420px;
-      height: 420px;
+      width: min(520px, 60vw);
+      height: min(520px, 60vw);
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 69, 0, 0.45) 0%, transparent 70%);
-      top: 10%;
-      left: 50%;
+      background: radial-gradient(circle, rgba(255, 69, 0, 0.4) 0%, transparent 70%);
+      top: 8%;
+      left: 55%;
       transform: translateX(-50%);
-      filter: blur(40px);
+      filter: blur(48px);
       pointer-events: none;
       animation: glow-pulse 4s ease-in-out infinite;
+      z-index: 2;
     }
 
     @keyframes glow-pulse {
-      0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+      0%, 100% { opacity: 0.65; transform: translateX(-50%) scale(1); }
       50% { opacity: 1; transform: translateX(-50%) scale(1.08); }
     }
 
-    .hero__portrait-wrap {
+    .hero__portrait {
       position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
+      top: 0;
+      right: 0;
+      width: auto;
+      height: 100%;
+      max-width: none;
+      min-height: 100%;
+      object-fit: contain;
+      object-position: right bottom;
     }
 
-    .hero__portrait {
-      width: 100%;
-      max-width: 560px;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      mask-image: linear-gradient(to bottom, #000 75%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, #000 75%, transparent 100%);
+    @media (max-width: 959px) {
+      .hero__portrait {
+        right: 50%;
+        transform: translateX(50%);
+        height: 92%;
+        top: auto;
+        bottom: 0;
+        object-position: center bottom;
+      }
     }
 
     .hero__visual-video {
@@ -383,7 +405,7 @@ const base = import.meta.env.BASE_URL;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
+      object-position: 75% center;
       opacity: 0;
       transition: opacity 0.8s ease;
       pointer-events: none;
@@ -396,20 +418,13 @@ const base = import.meta.env.BASE_URL;
 
     @media (prefers-reduced-motion: reduce) {
       .hero__visual-video { display: none; }
+      .hero__bg-media { transform: none !important; }
     }
 
     /* Content side */
-    .hero__content {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 48px 0 32px;
-      position: relative;
-    }
-
     @media (min-width: 960px) {
       .hero__content {
-        padding: 60px 48px 60px 0;
+        padding: 60px 0;
       }
     }
 
@@ -445,13 +460,14 @@ const base = import.meta.env.BASE_URL;
     .hero__title {
       margin-bottom: 20px;
       font-size: clamp(48px, 8.5vw, 92px);
-      line-height: 1.05;
+      line-height: 0.92;
     }
 
     .hero__title em {
       display: block;
       font-size: 0.88em;
-      margin-top: 8px;
+      margin-top: 0;
+      line-height: 0.95;
       color: var(--accent-light);
     }
 
@@ -834,7 +850,7 @@ const base = import.meta.env.BASE_URL;
 
     .card__title {
       font-family: var(--font-heading);
-      font-size: 20px;
+      font-size: clamp(24px, 2.8vw, 30px);
       font-weight: 900;
       color: var(--text-primary);
       margin-bottom: 8px;
@@ -918,7 +934,7 @@ const base = import.meta.env.BASE_URL;
 
     .roadmap__title {
       font-family: var(--font-heading);
-      font-size: 18px;
+      font-size: clamp(24px, 2.8vw, 30px);
       font-weight: 900;
       color: var(--text-primary);
       margin-bottom: 8px;
@@ -1225,21 +1241,17 @@ const base = import.meta.env.BASE_URL;
 
   <!-- Block 1: Hero -->
   <section id="hero" class="hero">
-    <div class="container hero__grid">
-      <!-- Visual (RTL: right side) -->
-      <div class="hero__visual" aria-hidden="true">
-        <div class="hero__visual-glow"></div>
-        <div class="hero__portrait-wrap">
-          <img
-            class="hero__portrait"
-            src="assets/images/hero-mentor.png"
-            alt=""
-            loading="eager"
-            fetchpriority="high"
-            width="560"
-            height="700"
-          >
-        </div>
+    <div class="hero__bg" aria-hidden="true">
+      <div class="hero__bg-media" id="hero-bg-media">
+        <img
+          class="hero__portrait"
+          src="assets/images/hero-mentor.png"
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          width="1920"
+          height="1080"
+        >
         <video
           id="hero-video"
           class="hero__visual-video"
@@ -1251,8 +1263,11 @@ const base = import.meta.env.BASE_URL;
           data-src="https://assets.mixkit.co/videos/preview/mixkit-stock-market-trends-on-a-computer-screen-4395-large.mp4"
         ></video>
       </div>
+      <div class="hero__bg-overlay"></div>
+      <div class="hero__visual-glow"></div>
+    </div>
 
-      <!-- Content (RTL: left side) -->
+    <div class="container hero__grid">
       <div class="hero__content">
         <p class="hero__greeting">
           <strong>בוקר טוב.</strong> יש לך 3 עדיפויות היום — כולל שידור חי בשעה 10:00. מוכנים להתקדם?
@@ -1649,6 +1664,38 @@ const base = import.meta.env.BASE_URL;
       document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
     }
 
+    /* ===== Hero parallax ===== */
+    function initHeroParallax() {
+      const hero = document.getElementById('hero');
+      const media = document.getElementById('hero-bg-media');
+      if (!hero || !media) return;
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      let ticking = false;
+      const factor = 0.06;
+
+      const update = () => {
+        const rect = hero.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+          ticking = false;
+          return;
+        }
+        const offset = Math.max(0, -rect.top) * factor;
+        media.style.transform = `translate3d(0, ${offset}px, 0)`;
+        ticking = false;
+      };
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      }, { passive: true });
+      update();
+    }
+
     /* ===== Hero background video (separate from block 2 explainer) ===== */
     function initHeroVideo() {
       const hero = document.getElementById('hero');
@@ -1757,6 +1804,7 @@ const base = import.meta.env.BASE_URL;
       initCtaButtons();
       initNavbar();
       animateOnScroll();
+      initHeroParallax();
       initHeroVideo();
       initVideo();
       initScrollDepth();
